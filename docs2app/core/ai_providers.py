@@ -147,9 +147,9 @@ class OpenAIProvider(AIProvider):
     async def generate(self, messages: List[AIMessage], **kwargs) -> AIResponse:
         """Generate response using OpenAI API"""
         try:
-            # Convert messages to OpenAI format  
+            # Convert messages to OpenAI format
             openai_messages = [
-                {"role": cast(str, msg.role), "content": cast(str, msg.content)} 
+                {"role": cast(str, msg.role), "content": cast(str, msg.content)}
                 for msg in messages
             ]
 
@@ -229,9 +229,9 @@ class AzureOpenAIProvider(AIProvider):
     async def generate(self, messages: List[AIMessage], **kwargs) -> AIResponse:
         """Generate response using Azure OpenAI API"""
         try:
-            # Convert messages to OpenAI format  
+            # Convert messages to OpenAI format
             openai_messages = [
-                {"role": cast(str, msg.role), "content": cast(str, msg.content)} 
+                {"role": cast(str, msg.role), "content": cast(str, msg.content)}
                 for msg in messages
             ]
 

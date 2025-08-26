@@ -104,8 +104,8 @@ class CodeGenerator:
 
         # Ensure project name is a string
         final_project_name: str = (
-            project_name 
-            if project_name 
+            project_name
+            if project_name
             else analysis_result.project_metadata.get("name", "generated_app")
         )
 

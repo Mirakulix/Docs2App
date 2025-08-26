@@ -3,8 +3,10 @@
 [![CI](https://github.com/Mirakulix/Docs2App/actions/workflows/ci.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/ci.yml)
 [![Code Quality](https://github.com/Mirakulix/Docs2App/actions/workflows/code-quality.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/code-quality.yml)
 [![Docker Build](https://github.com/Mirakulix/Docs2App/actions/workflows/docker.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/docker.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-Unlicense-green.svg)](https://unlicense.org)
 
-AI-powered tool that analyzes software documentation PDFs and generates complete application code with Claude Code implementation tasks.
+AI-powered tool that analyzes software documentation PDFs and generates complete application code with Claude Code implementation tasks. Features comprehensive CI/CD pipelines, Docker containerization, and multi-AI provider support.
 
 ## 🎯 Features
 
@@ -176,23 +178,47 @@ make debug          # Debug mode
 
 This project uses GitHub Actions for automated testing and quality assurance:
 
-- **CI Workflow**: Runs tests, linting, type checking, and security scans
-- **Code Quality**: Enforces code formatting, import sorting, and style guidelines  
-- **Docker Build**: Tests Docker image builds and deployments
-- **Multi-Python**: Tests against Python 3.11 and 3.12
+- **CI Workflow**: Comprehensive testing suite including unit tests, integration tests, and type checking
+- **Code Quality**: Automated linting with Black, isort, flake8, mypy, pylint, and bandit
+- **Security Scanning**: Vulnerability detection with safety and pip-audit  
+- **Docker Build**: Multi-stage containerization with health checks
+- **Multi-Python Support**: Tests against Python 3.11 and 3.12
+- **Dependency Management**: Automated security and compatibility checks
 
-All workflows run on push to `main`/`develop` branches and pull requests.
+All workflows run on push to `main`/`develop` branches and pull requests. The project maintains high code quality standards with comprehensive linting, type safety, and security scanning.
 
-### Type Checking
+### Code Quality & Testing
 
-This project uses mypy for static type checking:
+This project maintains high code quality standards:
 
+**Type Checking**
 ```bash
-# Run type checking
+# Static type checking with mypy
 python -m mypy docs2app/ main.py --ignore-missing-imports
+```
 
-# Type checking is included in development dependencies
-pip install -r requirements.txt  # Includes mypy and type stubs
+**Code Formatting & Linting**
+```bash
+# Format code with Black
+python -m black docs2app/ main.py --line-length 88
+
+# Sort imports with isort  
+python -m isort docs2app/ main.py --profile black
+
+# Lint with flake8
+python -m flake8 docs2app/ main.py --max-line-length=88
+
+# Security scanning with bandit
+python -m bandit -r docs2app/ -f json
+```
+
+**Testing**
+```bash
+# Run test suite
+python -m pytest tests/ -v --cov=docs2app
+
+# Test with Docker
+make test
 ```
 
 ### Local Development
@@ -211,10 +237,18 @@ python main.py analyze document.pdf --project-name "test"
 
 ## 📋 Requirements
 
-- **Docker & Docker Compose** (recommended)
-- **Python 3.11+** (for local development)
-- **8GB RAM** (for Ollama models)
-- **API Keys** (optional, for OpenAI/Azure)
+- **Docker & Docker Compose** (recommended for deployment)
+- **Python 3.11+** (required for local development) 
+- **8GB RAM** (recommended for Ollama AI models)
+- **API Keys** (optional, for OpenAI/Azure providers)
+
+### Dependencies
+
+This project uses modern Python libraries with pinned versions for stability:
+- **AI Libraries**: OpenAI 1.58+, Ollama 0.4+, latest model support
+- **PDF Processing**: pdfplumber 0.11+, PyPDF2 3.0+ for robust text extraction  
+- **Development Tools**: Black 25.1+, mypy 1.17+, pytest 8.3+ for quality assurance
+- **Security**: bandit 1.8+, safety 3.2+ for vulnerability scanning
 
 ## 🔍 Troubleshooting
 

@@ -7,7 +7,7 @@ import logging
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from ..core.ai_providers import AIMessage, AIProviderManager
 from ..core.config import ConfigManager
@@ -335,16 +335,18 @@ Antworte mit einem JSON-Objekt.
             "core_features": len([f for f in all_features if f.kategorie == "core"]),
         }
 
-    def _parse_ai_response(self, response_text: str) -> Dict:
+    def _parse_ai_response(self, response_text: str) -> Dict[str, Any]:
         """Parse AI response and extract JSON"""
         try:
             # Try to find JSON in the response
             json_match = re.search(r"\{.*\}", response_text, re.DOTALL)
             if json_match:
-                return json.loads(json_match.group())
+                result = json.loads(json_match.group())
+                return result if isinstance(result, dict) else {}
 
             # If no JSON found, try to parse the whole response
-            return json.loads(response_text)
+            result = json.loads(response_text)
+            return result if isinstance(result, dict) else {}
 
         except json.JSONDecodeError as e:
             logger.warning(f"Could not parse AI response as JSON: {e}")

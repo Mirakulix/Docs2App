@@ -288,25 +288,28 @@ class DocumentSegmenter:
         best_type = max(scores.keys(), key=lambda k: scores[k])
         return best_type, scores[best_type]
 
-    def get_section_summary(self, sections: List[DocumentSection]) -> Dict:
+    def get_section_summary(self, sections: List[DocumentSection]) -> Dict[str, Any]:
         """Generate summary statistics about sections"""
-        summary = {
-            "total_sections": len(sections),
-            "section_types": {},
-            "avg_confidence": 0,
-            "total_content_length": 0,
-        }
+        section_types: Dict[str, int] = {}
+        total_confidence = 0.0
+        total_content_length = 0
 
         for section in sections:
             section_type = section.section_type
-            if section_type not in summary["section_types"]:
-                summary["section_types"][section_type] = 0
-            summary["section_types"][section_type] += 1
+            if section_type not in section_types:
+                section_types[section_type] = 0
+            section_types[section_type] += 1
 
-            summary["total_content_length"] += len(section.content)
-            summary["avg_confidence"] += section.confidence
+            total_content_length += len(section.content)
+            total_confidence += section.confidence
 
-        if sections:
-            summary["avg_confidence"] /= len(sections)
+        avg_confidence = total_confidence / len(sections) if sections else 0.0
+
+        summary = {
+            "total_sections": len(sections),
+            "section_types": section_types,
+            "avg_confidence": avg_confidence,
+            "total_content_length": total_content_length,
+        }
 
         return summary

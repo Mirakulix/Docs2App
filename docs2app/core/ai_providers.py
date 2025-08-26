@@ -5,12 +5,12 @@ AI provider implementations for Ollama, OpenAI, and Azure OpenAI
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, AsyncGenerator, Dict, List, Optional
+from typing import Any, AsyncGenerator, Dict, List, Optional, Union, cast
 
 import httpx
-import ollama
-import openai
-from openai import AzureOpenAI
+import ollama  # type: ignore
+import openai  # type: ignore
+from openai import AzureOpenAI  # type: ignore
 
 from .config import AzureOpenAIConfig, ConfigManager, OllamaConfig, OpenAIConfig
 
@@ -106,7 +106,7 @@ class OllamaProvider(AIProvider):
                 {"role": msg.role, "content": msg.content} for msg in messages
             ]
 
-            async for chunk in await self.client.chat(
+            async for chunk in await self.client.chat(  # type: ignore
                 model=self.config.model,
                 messages=ollama_messages,
                 stream=True,
@@ -147,12 +147,13 @@ class OpenAIProvider(AIProvider):
     async def generate(self, messages: List[AIMessage], **kwargs) -> AIResponse:
         """Generate response using OpenAI API"""
         try:
-            # Convert messages to OpenAI format
+            # Convert messages to OpenAI format  
             openai_messages = [
-                {"role": msg.role, "content": msg.content} for msg in messages
+                {"role": cast(str, msg.role), "content": cast(str, msg.content)} 
+                for msg in messages
             ]
 
-            response = await self.client.chat.completions.create(
+            response = await self.client.chat.completions.create(  # type: ignore
                 model=self.config.model,
                 messages=openai_messages,
                 temperature=kwargs.get("temperature", self.config.temperature),
@@ -183,7 +184,7 @@ class OpenAIProvider(AIProvider):
                 {"role": msg.role, "content": msg.content} for msg in messages
             ]
 
-            stream = await self.client.chat.completions.create(
+            stream = await self.client.chat.completions.create(  # type: ignore
                 model=self.config.model,
                 messages=openai_messages,
                 temperature=kwargs.get("temperature", self.config.temperature),
@@ -191,7 +192,7 @@ class OpenAIProvider(AIProvider):
                 stream=True,
             )
 
-            async for chunk in stream:
+            async for chunk in stream:  # type: ignore
                 if chunk.choices[0].delta.content:
                     yield chunk.choices[0].delta.content
 
@@ -228,9 +229,10 @@ class AzureOpenAIProvider(AIProvider):
     async def generate(self, messages: List[AIMessage], **kwargs) -> AIResponse:
         """Generate response using Azure OpenAI API"""
         try:
-            # Convert messages to OpenAI format
+            # Convert messages to OpenAI format  
             openai_messages = [
-                {"role": msg.role, "content": msg.content} for msg in messages
+                {"role": cast(str, msg.role), "content": cast(str, msg.content)} 
+                for msg in messages
             ]
 
             response = self.client.chat.completions.create(
@@ -264,7 +266,7 @@ class AzureOpenAIProvider(AIProvider):
                 {"role": msg.role, "content": msg.content} for msg in messages
             ]
 
-            stream = self.client.chat.completions.create(
+            stream = self.client.chat.completions.create(  # type: ignore
                 model=self.config.deployment_name,
                 messages=openai_messages,
                 temperature=kwargs.get("temperature", self.config.temperature),
@@ -272,9 +274,16 @@ class AzureOpenAIProvider(AIProvider):
                 stream=True,
             )
 
-            async for chunk in stream:
-                if chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
+            # Azure OpenAI client may not be async in older versions
+            try:
+                async for chunk in stream:  # type: ignore
+                    if chunk.choices[0].delta.content:  # type: ignore
+                        yield chunk.choices[0].delta.content  # type: ignore
+            except TypeError:
+                # Fallback for sync streaming
+                for chunk in stream:  # type: ignore
+                    if chunk.choices[0].delta.content:  # type: ignore
+                        yield chunk.choices[0].delta.content  # type: ignore
 
         except Exception as e:
             logger.error(f"Azure OpenAI streaming failed: {e}")
@@ -354,8 +363,7 @@ class AIProviderManager:
     ) -> AsyncGenerator[str, None]:
         """Generate streaming response using specified or default provider"""
         ai_provider = self.get_provider(provider)
-        stream = ai_provider.generate_stream(messages, **kwargs)
-        async for chunk in stream:
+        async for chunk in ai_provider.generate_stream(messages, **kwargs):
             yield chunk
 
     async def health_check_all(self) -> Dict[str, bool]:

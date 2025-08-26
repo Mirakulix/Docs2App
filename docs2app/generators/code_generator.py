@@ -102,12 +102,16 @@ class CodeGenerator:
         """
         logger.info("Starting AI-powered project generation")
 
-        if not project_name:
-            project_name = analysis_result.project_metadata.get("name", "generated_app")
+        # Ensure project name is a string
+        final_project_name: str = (
+            project_name 
+            if project_name 
+            else analysis_result.project_metadata.get("name", "generated_app")
+        )
 
         # Step 1: Generate project structure
         project_structure = await self._generate_project_structure(
-            analysis_result, project_name
+            analysis_result, final_project_name
         )
 
         # Step 2: Generate Claude Code tasks
@@ -480,15 +484,17 @@ Meilensteine: {len(plan.get('milestones', []))} Meilensteine
 
         return tasks
 
-    def _parse_ai_response(self, response_text: str) -> Dict:
+    def _parse_ai_response(self, response_text: str) -> Dict[str, Any]:
         """Parse AI response JSON with fallback"""
         try:
             import re
 
             json_match = re.search(r"\{.*\}", response_text, re.DOTALL)
             if json_match:
-                return json.loads(json_match.group())
-            return json.loads(response_text)
+                result = json.loads(json_match.group())
+                return result if isinstance(result, dict) else {}
+            result = json.loads(response_text)
+            return result if isinstance(result, dict) else {}
         except json.JSONDecodeError:
             logger.warning("Could not parse AI response as JSON")
             return {}

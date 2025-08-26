@@ -22,6 +22,7 @@ jinja2==3.1.2
 
 # Basic development tools
 mypy==1.8.0
+types-PyYAML==6.0.12.20240917
 pytest==7.4.3
 
 # Optional: Data Processing (install separately if needed)

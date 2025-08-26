@@ -1,0 +1,200 @@
+{
+  "stats": {
+    "total_chars": 12722,
+    "total_sections": 30,
+    "high_confidence_sections": 8,
+    "technical_sections": 5,
+    "requirements_sections": 4,
+    "content_categories": 6
+  },
+  "section_types": {
+    "anforderungen": 4,
+    "general": 15,
+    "ziele": 4,
+    "technisch": 5,
+    "features": 1,
+    "daten": 1
+  },
+  "sections_preview": [
+    {
+      "title": "Anforderungsspezifikation",
+      "type": "anforderungen",
+      "confidence": 0.7899999999999999,
+      "content_length": 360
+    },
+    {
+      "title": "Grundregeln",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 62
+    },
+    {
+      "title": "1. Gitteraufbau: Das Spielfeld besteht aus 81 Feldern, angeordnet in einem 9x9 Gitter",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "2. Unterquadrate: Das Gitter ist in 9 kleinere 3x3 Quadrate unterteilt",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "3. Zahlenbereich: Es werden nur die Zahlen 1 bis 9 verwendet",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "4. Eindeutigkeit: Jede Zahl darf nur einmal in jeder Zeile, Spalte und jedem 3x3-Quadrat",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "vorkommen",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "Detaillierte Regeln",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 279
+    },
+    {
+      "title": "vorkommen",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 273
+    },
+    {
+      "title": "Spielziel",
+      "type": "ziele",
+      "confidence": 0.876470588235294,
+      "content_length": 103
+    },
+    {
+      "title": "Benutzerfreundliche Steuerung und Eingabe",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 1648
+    },
+    {
+      "title": "Universelle Steuerungselemente",
+      "type": "technisch",
+      "confidence": 0.1,
+      "content_length": 793
+    },
+    {
+      "title": "Desktop Browser Anforderungen",
+      "type": "anforderungen",
+      "confidence": 0.75,
+      "content_length": 547
+    },
+    {
+      "title": "Mobile Browser Anforderungen",
+      "type": "anforderungen",
+      "confidence": 0.7899999999999999,
+      "content_length": 1211
+    },
+    {
+      "title": "Technische Implementierung",
+      "type": "technisch",
+      "confidence": 0.746875,
+      "content_length": 584
+    },
+    {
+      "title": "Responsive Design Implementierung",
+      "type": "technisch",
+      "confidence": 0.7288461538461538,
+      "content_length": 855
+    },
+    {
+      "title": "Spielmechanik Details",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "Schwierigkeitsgrade",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 629
+    },
+    {
+      "title": "Hilfsfunktionen",
+      "type": "features",
+      "confidence": 0.7612244897959183,
+      "content_length": 560
+    },
+    {
+      "title": "Validierung und Feedback",
+      "type": "ziele",
+      "confidence": 0.17543859649122806,
+      "content_length": 629
+    },
+    {
+      "title": "Visuelle Accessibility",
+      "type": "technisch",
+      "confidence": 0.3448275862068965,
+      "content_length": 284
+    },
+    {
+      "title": "Motorische Accessibility",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 313
+    },
+    {
+      "title": "Kognitive Accessibility",
+      "type": "technisch",
+      "confidence": 0.41666666666666663,
+      "content_length": 262
+    },
+    {
+      "title": "Speicherung und Persistierung",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "Browser Storage",
+      "type": "daten",
+      "confidence": 0.42857142857142855,
+      "content_length": 625
+    },
+    {
+      "title": "Backup und Synchronisation",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 263
+    },
+    {
+      "title": "Testing Anforderungen",
+      "type": "anforderungen",
+      "confidence": 0.807142857142857,
+      "content_length": 493
+    },
+    {
+      "title": "Performance Metriken",
+      "type": "ziele",
+      "confidence": 0.2857142857142857,
+      "content_length": 242
+    },
+    {
+      "title": "Erfolgsmetriken",
+      "type": "general",
+      "confidence": 0.3,
+      "content_length": 0
+    },
+    {
+      "title": "Benutzerfreundlichkeit",
+      "type": "ziele",
+      "confidence": 0.11764705882352941,
+      "content_length": 730
+    }
+  ]
+}

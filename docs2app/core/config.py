@@ -3,10 +3,11 @@ Configuration management for Docs2App
 """
 
 import os
-import yaml
-from pathlib import Path
-from typing import Dict, Any, Optional
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import yaml
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -62,13 +63,15 @@ class AnalysisConfig:
     min_confidence: float = 0.6
     enable_implicit_features: bool = True
     categorization_threshold: float = 0.7
-    feature_categories: Dict[str, float] = field(default_factory=lambda: {
-        "core": 1.0,
-        "optional": 0.7,
-        "technisch": 0.8,
-        "ui": 0.6,
-        "api": 0.9
-    })
+    feature_categories: Dict[str, float] = field(
+        default_factory=lambda: {
+            "core": 1.0,
+            "optional": 0.7,
+            "technisch": 0.8,
+            "ui": 0.6,
+            "api": 0.9,
+        }
+    )
 
 
 @dataclass
@@ -76,11 +79,13 @@ class GenerationConfig:
     output_format: str = "structured"
     include_tests: bool = True
     include_documentation: bool = True
-    framework_preferences: Dict[str, list] = field(default_factory=lambda: {
-        "frontend": ["react", "vue", "svelte"],
-        "backend": ["fastapi", "django", "flask"],
-        "database": ["postgresql", "sqlite", "mongodb"]
-    })
+    framework_preferences: Dict[str, list] = field(
+        default_factory=lambda: {
+            "frontend": ["react", "vue", "svelte"],
+            "backend": ["fastapi", "django", "flask"],
+            "database": ["postgresql", "sqlite", "mongodb"],
+        }
+    )
 
 
 @dataclass
@@ -102,92 +107,92 @@ class AppConfig:
 
 class ConfigManager:
     """Manage application configuration from YAML file and environment variables"""
-    
+
     def __init__(self, config_path: Optional[str] = None):
         self.config_path = config_path or os.getenv("CONFIG_FILE", "config.yaml")
         self.config = self._load_config()
-    
+
     def _load_config(self) -> AppConfig:
         """Load configuration from YAML file and environment variables"""
         config_data: Dict[str, Any] = {}
-        
+
         # Load from YAML file if it exists
         if self.config_path and os.path.exists(self.config_path):
-            with open(self.config_path, 'r', encoding='utf-8') as f:
+            with open(self.config_path, "r", encoding="utf-8") as f:
                 config_data = yaml.safe_load(f) or {}
-        
+
         # Override with environment variables
         config_data = self._apply_env_variables(config_data)
-        
+
         # Create configuration objects
         return self._create_config_objects(config_data)
-    
+
     def _apply_env_variables(self, config_data: Dict) -> Dict:
         """Apply environment variable overrides"""
         # Process AI provider configs
         if "ai_providers" not in config_data:
             config_data["ai_providers"] = {}
-        
+
         ai_config = config_data["ai_providers"]
-        
+
         # OpenAI
         if "openai" not in ai_config:
             ai_config["openai"] = {}
         ai_config["openai"]["api_key"] = os.getenv("OPENAI_API_KEY")
-        
+
         # Azure OpenAI
         if "azure" not in ai_config:
             ai_config["azure"] = {}
         ai_config["azure"]["api_key"] = os.getenv("AZURE_OPENAI_API_KEY")
         ai_config["azure"]["endpoint"] = os.getenv("AZURE_OPENAI_ENDPOINT")
         ai_config["azure"]["deployment_name"] = os.getenv("AZURE_OPENAI_DEPLOYMENT")
-        
+
         # Ollama
         if "ollama" not in ai_config:
             ai_config["ollama"] = {}
         if os.getenv("OLLAMA_BASE_URL"):
             ai_config["ollama"]["base_url"] = os.getenv("OLLAMA_BASE_URL")
-        
+
         return config_data
-    
+
     def _create_config_objects(self, config_data: Dict) -> AppConfig:
         """Create typed configuration objects from dictionary"""
         # AI Providers
         ai_data = config_data.get("ai_providers", {})
-        
+
         ollama_config = OllamaConfig(**ai_data.get("ollama", {}))
         openai_config = OpenAIConfig(**ai_data.get("openai", {}))
         azure_config = AzureOpenAIConfig(**ai_data.get("azure", {}))
-        
+
         ai_providers = AIProvidersConfig(
             default=ai_data.get("default", "ollama"),
             ollama=ollama_config,
             openai=openai_config,
-            azure=azure_config
+            azure=azure_config,
         )
-        
+
         # Other configurations
         pdf_config = PDFConfig(**config_data.get("pdf", {}))
         analysis_config = AnalysisConfig(**config_data.get("analysis", {}))
         generation_config = GenerationConfig(**config_data.get("generation", {}))
         output_config = OutputConfig(**config_data.get("output", {}))
-        
+
         return AppConfig(
             ai_providers=ai_providers,
             pdf=pdf_config,
             analysis=analysis_config,
             generation=generation_config,
-            output=output_config
+            output=output_config,
         )
-    
+
     def get_active_ai_provider(self) -> str:
         """Get the currently active AI provider"""
         return self.config.ai_providers.default
-    
+
     def get_ai_config(self, provider: Optional[str] = None):
         """Get configuration for specified AI provider"""
         provider = provider or self.get_active_ai_provider()
-        
+
         if provider == "ollama":
             return self.config.ai_providers.ollama
         elif provider == "openai":
@@ -196,21 +201,18 @@ class ConfigManager:
             return self.config.ai_providers.azure
         else:
             raise ValueError(f"Unknown AI provider: {provider}")
-    
+
     def validate_config(self) -> Dict[str, list]:
         """Validate configuration and return any issues"""
-        issues: Dict[str, list] = {
-            "errors": [],
-            "warnings": []
-        }
-        
+        issues: Dict[str, list] = {"errors": [], "warnings": []}
+
         # Validate AI provider configurations
         provider = self.get_active_ai_provider()
-        
+
         if provider == "openai":
             if not self.config.ai_providers.openai.api_key:
                 issues["errors"].append("OpenAI API key not configured")
-        
+
         elif provider == "azure":
             azure_config = self.config.ai_providers.azure
             if not azure_config.api_key:
@@ -219,29 +221,31 @@ class ConfigManager:
                 issues["errors"].append("Azure OpenAI endpoint not configured")
             if not azure_config.deployment_name:
                 issues["errors"].append("Azure OpenAI deployment name not configured")
-        
+
         elif provider == "ollama":
             # Ollama validation could check if service is running
             pass
-        
+
         # Validate output directory
         output_dir = Path(self.config.output.directory)
         if not output_dir.parent.exists():
-            issues["warnings"].append(f"Output directory parent does not exist: {output_dir.parent}")
-        
+            issues["warnings"].append(
+                f"Output directory parent does not exist: {output_dir.parent}"
+            )
+
         return issues
-    
+
     def save_config(self, config_path: Optional[str] = None):
         """Save current configuration to YAML file"""
         path = config_path or self.config_path
-        
+
         # Convert config objects back to dictionary
         config_dict = self._config_to_dict()
-        
+
         if path:
-            with open(path, 'w', encoding='utf-8') as f:
+            with open(path, "w", encoding="utf-8") as f:
                 yaml.dump(config_dict, f, default_flow_style=False, indent=2)
-    
+
     def _config_to_dict(self) -> Dict:
         """Convert configuration objects to dictionary format"""
         # This is a simplified version - in a real implementation,
@@ -254,8 +258,8 @@ class ConfigManager:
                     "model": self.config.ai_providers.ollama.model,
                     "temperature": self.config.ai_providers.ollama.temperature,
                     "max_tokens": self.config.ai_providers.ollama.max_tokens,
-                    "timeout": self.config.ai_providers.ollama.timeout
-                }
+                    "timeout": self.config.ai_providers.ollama.timeout,
+                },
                 # Add other providers as needed
             }
             # Add other config sections as needed

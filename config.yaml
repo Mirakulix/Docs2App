@@ -1,0 +1,68 @@
+# Docs2App Configuration File
+
+ai_providers:
+  # Default provider to use (ollama, openai, azure)
+  default: "ollama"
+  
+  # Ollama Configuration
+  ollama:
+    base_url: "http://localhost:11434"
+    model: "llama3.1:8b"
+    temperature: 0.7
+    max_tokens: 4096
+    timeout: 60
+  
+  # OpenAI Configuration
+  openai:
+    api_key: "${OPENAI_API_KEY}"  # Set via environment variable
+    model: "gpt-4o-mini"
+    temperature: 0.7
+    max_tokens: 4096
+    timeout: 60
+  
+  # Azure OpenAI Configuration
+  azure:
+    api_key: "${AZURE_OPENAI_API_KEY}"  # Set via environment variable
+    endpoint: "${AZURE_OPENAI_ENDPOINT}"  # Set via environment variable
+    api_version: "2024-02-15-preview"
+    deployment_name: "${AZURE_OPENAI_DEPLOYMENT}"  # Set via environment variable
+    temperature: 0.7
+    max_tokens: 4096
+    timeout: 60
+
+# PDF Processing Settings
+pdf:
+  method: "pdfplumber"  # or "pypdf2"
+  preprocess: true
+  max_file_size_mb: 50
+
+# Feature Analysis Settings
+analysis:
+  min_confidence: 0.6
+  enable_implicit_features: true
+  categorization_threshold: 0.7
+  
+  # Feature categories and priorities
+  feature_categories:
+    core: 1.0
+    optional: 0.7
+    technisch: 0.8
+    ui: 0.6
+    api: 0.9
+
+# Code Generation Settings
+generation:
+  output_format: "structured"  # or "markdown", "json"
+  include_tests: true
+  include_documentation: true
+  framework_preferences:
+    frontend: ["react", "vue", "svelte"]
+    backend: ["fastapi", "django", "flask"]
+    database: ["postgresql", "sqlite", "mongodb"]
+
+# Output Settings
+output:
+  directory: "./output"
+  create_project_structure: true
+  generate_readme: true
+  include_claude_tasks: true

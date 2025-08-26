@@ -254,7 +254,7 @@ def main():
     """Main entry point"""
     try:
         # Run the async CLI
-        cli(_anyio_backend="asyncio")
+        cli()
     except KeyboardInterrupt:
         console.print("\n👋 Goodbye!")
     except Exception as e:

@@ -244,11 +244,13 @@ python main.py analyze document.pdf --project-name "test"
 
 ### Dependencies
 
-This project uses modern Python libraries with pinned versions for stability:
-- **AI Libraries**: OpenAI 1.58+, Ollama 0.4+, latest model support
-- **PDF Processing**: pdfplumber 0.11+, PyPDF2 3.0+ for robust text extraction  
-- **Development Tools**: Black 25.1+, mypy 1.17+, pytest 8.3+ for quality assurance
-- **Security**: bandit 1.8+, safety 3.2+ for vulnerability scanning
+This project uses carefully tested Python libraries with compatible versions:
+- **AI Libraries**: OpenAI 1.58+, Ollama 0.3+, httpx 0.27+ for reliable API communication
+- **PDF Processing**: pdfplumber 0.10+, PyPDF2 3.0+ for robust text extraction  
+- **Development Tools**: Black 24.2+, mypy 1.8+, pytest 8.0+ for quality assurance
+- **Security**: bandit 1.7+, safety 3.0+ for vulnerability scanning
+
+**Note**: All dependency versions are tested for compatibility. A flexible requirements file (`requirements-flexible.txt`) is also available for development.
 
 ## 🔍 Troubleshooting
 

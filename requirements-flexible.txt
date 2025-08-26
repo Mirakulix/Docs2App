@@ -1,0 +1,48 @@
+# Core PDF and Document Processing
+PyPDF2>=3.0.1
+pdfplumber>=0.10.3
+nltk>=3.8.1
+spacy>=3.7.4,<4.0.0
+python-docx>=1.1.0
+
+# CLI and UI
+click>=8.1.7
+rich>=13.7.1
+
+# Data Processing
+pandas>=2.1.4
+numpy>=1.26.4
+scikit-learn>=1.3.2
+
+# AI API Libraries  
+openai>=1.40.0
+ollama>=0.3.1
+httpx>=0.27.0,<0.28.0
+aiohttp>=3.9.1
+
+# Configuration and utilities
+pydantic>=2.5.2
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+jinja2>=3.1.2
+jsonschema>=4.20.0
+
+# Type checking and development tools
+mypy>=1.8.0
+types-PyYAML>=6.0.12
+flake8>=7.0.0
+black>=24.2.0
+isort>=5.13.2
+pylint>=3.0.3
+bandit>=1.7.7
+safety>=3.0.1
+
+# Testing
+pytest>=8.0.2
+pytest-cov>=4.0.0
+pytest-asyncio>=0.23.5
+pytest-mock>=3.12.0
+
+# Security and auditing
+pip-audit>=2.7.2
+pre-commit>=3.6.2

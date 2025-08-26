@@ -1,5 +1,9 @@
 # Docs2App 🚀
 
+[![CI](https://github.com/Mirakulix/Docs2App/actions/workflows/ci.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/ci.yml)
+[![Code Quality](https://github.com/Mirakulix/Docs2App/actions/workflows/code-quality.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/code-quality.yml)
+[![Docker Build](https://github.com/Mirakulix/Docs2App/actions/workflows/docker.yml/badge.svg)](https://github.com/Mirakulix/Docs2App/actions/workflows/docker.yml)
+
 AI-powered tool that analyzes software documentation PDFs and generates complete application code with Claude Code implementation tasks.
 
 ## 🎯 Features
@@ -167,6 +171,17 @@ make lint           # Code linting
 make clean          # Clean up Docker
 make debug          # Debug mode
 ```
+
+### Continuous Integration
+
+This project uses GitHub Actions for automated testing and quality assurance:
+
+- **CI Workflow**: Runs tests, linting, type checking, and security scans
+- **Code Quality**: Enforces code formatting, import sorting, and style guidelines  
+- **Docker Build**: Tests Docker image builds and deployments
+- **Multi-Python**: Tests against Python 3.11 and 3.12
+
+All workflows run on push to `main`/`develop` branches and pull requests.
 
 ### Type Checking
 

@@ -1,0 +1,81 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-quality-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-quality-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 black isort pylint
+
+    - name: Run flake8
+      run: |
+        flake8 docs2app/ main.py --max-line-length=127 --extend-ignore=E203,W503
+
+    - name: Check formatting with black
+      run: |
+        black --check docs2app/ main.py
+
+    - name: Check import sorting
+      run: |
+        isort --check-only docs2app/ main.py
+
+    - name: Run pylint
+      run: |
+        pylint docs2app/ --disable=C0114,C0115,C0116,R0903,R0913,W0613 --max-line-length=127 || exit 0
+
+    - name: Type checking
+      run: |
+        python -m mypy docs2app/ main.py --ignore-missing-imports
+
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install pip-audit
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-audit
+
+    - name: Audit dependencies
+      run: |
+        pip-audit --requirement requirements.txt --format=json --output=audit-report.json || true
+        pip-audit --requirement requirements.txt
+
+    - name: Upload audit report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dependency-audit-report
+        path: audit-report.json

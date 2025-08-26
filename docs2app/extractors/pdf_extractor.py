@@ -41,15 +41,15 @@ class PDFExtractor:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
             
-        file_path = Path(file_path)
-        if file_path.suffix.lower() not in self.supported_formats:
-            raise ValueError(f"Unsupported file format: {file_path.suffix}")
+        file_path_obj = Path(file_path)
+        if file_path_obj.suffix.lower() not in self.supported_formats:
+            raise ValueError(f"Unsupported file format: {file_path_obj.suffix}")
         
         try:
             if self.method == 'pdfplumber':
-                return self._extract_with_pdfplumber(file_path)
+                return self._extract_with_pdfplumber(file_path_obj)
             elif self.method == 'pypdf2':
-                return self._extract_with_pypdf2(file_path)
+                return self._extract_with_pypdf2(file_path_obj)
             else:
                 raise ValueError(f"Unknown extraction method: {self.method}")
                 
@@ -170,12 +170,12 @@ class PDFExtractor:
         Returns:
             List of PDF file paths
         """
-        directory = Path(directory)
-        if not directory.exists():
-            raise FileNotFoundError(f"Directory not found: {directory}")
+        directory_path = Path(directory)
+        if not directory_path.exists():
+            raise FileNotFoundError(f"Directory not found: {directory_path}")
         
         pdf_files = []
-        for file_path in directory.rglob("*.pdf"):
+        for file_path in directory_path.rglob("*.pdf"):
             pdf_files.append(str(file_path))
         
         return sorted(pdf_files)

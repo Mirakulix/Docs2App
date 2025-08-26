@@ -6,8 +6,8 @@ import asyncio
 import json
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Any, AsyncGenerator
-from dataclasses import dataclass
+from typing import Dict, List, Optional, Any, AsyncGenerator, Coroutine
+from dataclasses import dataclass, field
 
 import httpx
 import openai
@@ -34,7 +34,7 @@ class AIResponse:
     model: str
     tokens_used: Optional[int] = None
     finish_reason: Optional[str] = None
-    metadata: Dict[str, Any] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 class AIProvider(ABC):
@@ -163,12 +163,12 @@ class OpenAIProvider(AIProvider):
             )
             
             return AIResponse(
-                content=response.choices[0].message.content,
+                content=response.choices[0].message.content or "",
                 provider="openai",
                 model=self.config.model,
                 tokens_used=response.usage.total_tokens if response.usage else None,
                 finish_reason=response.choices[0].finish_reason,
-                metadata=response.model_dump() if hasattr(response, 'model_dump') else None
+                metadata=response.model_dump() if hasattr(response, 'model_dump') else {}
             )
             
         except Exception as e:
@@ -219,7 +219,7 @@ class AzureOpenAIProvider(AIProvider):
         self.client = AzureOpenAI(
             api_key=config.api_key,
             api_version=config.api_version,
-            azure_endpoint=config.endpoint,
+            azure_endpoint=config.endpoint or "",
             timeout=config.timeout
         )
     
@@ -232,7 +232,7 @@ class AzureOpenAIProvider(AIProvider):
                 for msg in messages
             ]
             
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model=self.config.deployment_name,  # Azure uses deployment name
                 messages=openai_messages,
                 temperature=kwargs.get("temperature", self.config.temperature),
@@ -240,12 +240,12 @@ class AzureOpenAIProvider(AIProvider):
             )
             
             return AIResponse(
-                content=response.choices[0].message.content,
+                content=response.choices[0].message.content or "",
                 provider="azure",
-                model=self.config.deployment_name,
+                model=self.config.deployment_name or "",
                 tokens_used=response.usage.total_tokens if response.usage else None,
                 finish_reason=response.choices[0].finish_reason,
-                metadata=response.model_dump() if hasattr(response, 'model_dump') else None
+                metadata=response.model_dump() if hasattr(response, 'model_dump') else {}
             )
             
         except Exception as e:
@@ -260,7 +260,7 @@ class AzureOpenAIProvider(AIProvider):
                 for msg in messages
             ]
             
-            stream = await self.client.chat.completions.create(
+            stream = self.client.chat.completions.create(
                 model=self.config.deployment_name,
                 messages=openai_messages,
                 temperature=kwargs.get("temperature", self.config.temperature),
@@ -279,7 +279,7 @@ class AzureOpenAIProvider(AIProvider):
     async def health_check(self) -> bool:
         """Check if Azure OpenAI API is available"""
         try:
-            await self.client.models.list()
+            self.client.models.list()
             return True
         except Exception:
             return False
@@ -338,7 +338,8 @@ class AIProviderManager:
     async def generate_stream(self, messages: List[AIMessage], provider: Optional[str] = None, **kwargs) -> AsyncGenerator[str, None]:
         """Generate streaming response using specified or default provider"""
         ai_provider = self.get_provider(provider)
-        async for chunk in ai_provider.generate_stream(messages, **kwargs):
+        stream = ai_provider.generate_stream(messages, **kwargs)
+        async for chunk in stream:
             yield chunk
     
     async def health_check_all(self) -> Dict[str, bool]:

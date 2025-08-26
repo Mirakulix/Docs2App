@@ -4,6 +4,7 @@ Main document processing orchestrator
 
 import logging
 import asyncio
+import os
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 

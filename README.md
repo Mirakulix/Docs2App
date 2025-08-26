@@ -168,6 +168,18 @@ make clean          # Clean up Docker
 make debug          # Debug mode
 ```
 
+### Type Checking
+
+This project uses mypy for static type checking:
+
+```bash
+# Run type checking
+python -m mypy docs2app/ main.py --ignore-missing-imports
+
+# Type checking is included in development dependencies
+pip install -r requirements.txt  # Includes mypy and type stubs
+```
+
 ### Local Development
 ```bash
 # Setup Python environment

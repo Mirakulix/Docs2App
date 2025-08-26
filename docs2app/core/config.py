@@ -109,10 +109,10 @@ class ConfigManager:
     
     def _load_config(self) -> AppConfig:
         """Load configuration from YAML file and environment variables"""
-        config_data = {}
+        config_data: Dict[str, Any] = {}
         
         # Load from YAML file if it exists
-        if os.path.exists(self.config_path):
+        if self.config_path and os.path.exists(self.config_path):
             with open(self.config_path, 'r', encoding='utf-8') as f:
                 config_data = yaml.safe_load(f) or {}
         
@@ -199,7 +199,7 @@ class ConfigManager:
     
     def validate_config(self) -> Dict[str, list]:
         """Validate configuration and return any issues"""
-        issues = {
+        issues: Dict[str, list] = {
             "errors": [],
             "warnings": []
         }
@@ -238,8 +238,9 @@ class ConfigManager:
         # Convert config objects back to dictionary
         config_dict = self._config_to_dict()
         
-        with open(path, 'w', encoding='utf-8') as f:
-            yaml.dump(config_dict, f, default_flow_style=False, indent=2)
+        if path:
+            with open(path, 'w', encoding='utf-8') as f:
+                yaml.dump(config_dict, f, default_flow_style=False, indent=2)
     
     def _config_to_dict(self) -> Dict:
         """Convert configuration objects to dictionary format"""

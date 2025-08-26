@@ -6,7 +6,7 @@ import json
 import logging
 import re
 from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime
 
 from ..core.ai_providers import AIProviderManager, AIMessage
@@ -25,15 +25,9 @@ class Feature:
     priorität: str  # hoch/mittel/niedrig
     confidence: float
     user_story: Optional[str] = None
-    acceptance_criteria: List[str] = None
-    technical_requirements: List[str] = None
+    acceptance_criteria: List[str] = field(default_factory=list)
+    technical_requirements: List[str] = field(default_factory=list)
     estimated_complexity: Optional[str] = None  # niedrig/mittel/hoch
-    
-    def __post_init__(self):
-        if self.acceptance_criteria is None:
-            self.acceptance_criteria = []
-        if self.technical_requirements is None:
-            self.technical_requirements = []
 
 
 @dataclass
@@ -271,9 +265,9 @@ Antworte mit einem JSON-Objekt.
         all_features = features + implicit_features
         
         # Count by category
-        categories = {}
-        priorities = {}
-        complexities = {}
+        categories: Dict[str, int] = {}
+        priorities: Dict[str, int] = {}
+        complexities: Dict[str, int] = {}
         
         for feature in all_features:
             categories[feature.kategorie] = categories.get(feature.kategorie, 0) + 1

@@ -324,7 +324,7 @@ Meilensteine: {len(plan.get('milestones', []))} Meilensteine
     
     def _group_features_for_tasks(self, features: List[Feature]) -> Dict[str, List[Feature]]:
         """Group features into logical task groups"""
-        groups = {
+        groups: Dict[str, List[Feature]] = {
             "Authentifizierung": [],
             "Core Features": [],
             "API Integration": [],

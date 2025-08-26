@@ -4,7 +4,7 @@ Document segmentation module to identify and categorize sections
 
 import re
 import logging
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
 
 import nltk
@@ -116,18 +116,18 @@ class DocumentSegmenter:
         
         return sections
     
-    def _segment_by_headers(self, text: str) -> List[Dict]:
+    def _segment_by_headers(self, text: str) -> List[Dict[str, Any]]:
         """Segment document based on detected headers"""
-        sections = []
+        sections: List[Dict[str, Any]] = []
         lines = text.split('\n')
-        current_section = None
+        current_section: Optional[Dict[str, Any]] = None
         
         for i, line in enumerate(lines):
             header_match = self._detect_header(line, lines, i)
             
             if header_match:
                 # Save previous section
-                if current_section:
+                if current_section is not None:
                     current_section['content'] = '\n'.join(
                         current_section['content']
                     ).strip()
@@ -140,11 +140,11 @@ class DocumentSegmenter:
                     'content': [],
                     'start': i
                 }
-            elif current_section:
+            elif current_section is not None:
                 current_section['content'].append(line)
         
         # Don't forget the last section
-        if current_section:
+        if current_section is not None:
             current_section['content'] = '\n'.join(
                 current_section['content']
             ).strip()
@@ -153,7 +153,7 @@ class DocumentSegmenter:
         
         return sections
     
-    def _detect_header(self, line: str, lines: List[str], index: int) -> str:
+    def _detect_header(self, line: str, lines: List[str], index: int) -> Optional[str]:
         """Detect if a line is a header and return the header text"""
         line = line.strip()
         
@@ -172,10 +172,10 @@ class DocumentSegmenter:
     
     def _segment_by_patterns(self, text: str) -> List[DocumentSection]:
         """Fallback segmentation using content patterns"""
-        sections = []
+        sections: List[DocumentSection] = []
         paragraphs = text.split('\n\n')
         
-        current_section = {
+        current_section: Dict[str, Any] = {
             'content': [],
             'type': 'general',
             'confidence': 0.3
@@ -195,8 +195,8 @@ class DocumentSegmenter:
                     sections.append(DocumentSection(
                         title=f"Section {len(sections) + 1}",
                         content='\n\n'.join(current_section['content']),
-                        section_type=current_section['type'],
-                        confidence=current_section['confidence'],
+                        section_type=str(current_section['type']),
+                        confidence=float(current_section['confidence']),
                         start_position=0,
                         end_position=0
                     ))
@@ -214,8 +214,8 @@ class DocumentSegmenter:
             sections.append(DocumentSection(
                 title=f"Section {len(sections) + 1}",
                 content='\n\n'.join(current_section['content']),
-                section_type=current_section['type'],
-                confidence=current_section['confidence'],
+                section_type=str(current_section['type']),
+                confidence=float(current_section['confidence']),
                 start_position=0,
                 end_position=0
             ))

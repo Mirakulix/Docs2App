@@ -1,20 +1,14 @@
-# Core PDF and Document Processing
+# Essential Core Dependencies - Tested Working Configuration
 PyPDF2==3.0.1
 pdfplumber==0.10.3
 nltk==3.8.1
-spacy==3.6.1
 python-docx==1.0.1
 
 # CLI and UI
 click==8.1.7
 rich==13.7.1
 
-# Data Processing
-pandas==2.1.4
-numpy==1.26.4
-scikit-learn==1.3.2
-
-# AI API Libraries
+# AI API Libraries - Compatible Versions
 openai==1.3.5
 ollama==0.1.7
 httpx==0.25.2
@@ -25,24 +19,28 @@ pydantic==1.10.12
 python-dotenv==1.0.0
 pyyaml==6.0.1
 jinja2==3.1.2
-jsonschema==4.20.0
 
-# Type checking and development tools
+# Basic development tools
 mypy==1.8.0
-types-PyYAML==6.0.12.20240917
-flake8==7.0.0
-black==24.2.0
-isort==5.13.2
-pylint==3.0.3
-bandit==1.7.5
-safety==2.3.5
+pytest==7.4.3
 
-# Testing
-pytest==8.0.2
-pytest-cov==4.0.0
-pytest-asyncio==0.23.5
-pytest-mock==3.12.0
+# Optional: Data Processing (install separately if needed)
+# pandas==2.1.4
+# numpy==1.26.4
+# scikit-learn==1.3.2
+# spacy==3.6.1
 
-# Security and auditing
-pip-audit==2.7.2
-pre-commit==3.6.2
+# Optional: Additional development tools (install separately if needed)
+# types-PyYAML==6.0.12.20240917
+# flake8==7.0.0
+# black==24.2.0
+# isort==5.13.2
+# pylint==3.0.3
+# bandit==1.7.5
+# safety==2.3.5
+# pytest-cov==4.0.0
+# pytest-asyncio==0.23.5
+# pytest-mock==3.12.0
+# pip-audit==2.7.2
+# pre-commit==3.6.2
+# jsonschema==4.20.0

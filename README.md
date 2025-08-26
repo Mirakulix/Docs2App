@@ -226,7 +226,15 @@ make test
 # Setup Python environment
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Install core dependencies (tested working combination)
 pip install -r requirements.txt
+
+# Optional: Install development tools
+pip install -r requirements-dev.txt
+
+# Test installation
+python test_functionality.py
 
 # Run tests
 python -m pytest tests/
@@ -244,14 +252,21 @@ python main.py analyze document.pdf --project-name "test"
 
 ### Dependencies
 
-This project uses carefully tested Python libraries with compatible versions:
-- **AI Libraries**: OpenAI 1.3+, Ollama 0.1+, httpx 0.25+ for reliable API communication
-- **PDF Processing**: pdfplumber 0.10+, PyPDF2 3.0+ for robust text extraction  
-- **Development Tools**: Black 24.2+, mypy 1.8+, pytest 8.0+ for quality assurance
-- **Security**: bandit 1.7+, safety 2.3+ for vulnerability scanning
-- **Core Libraries**: pydantic 1.10+ for data validation and type safety
+This project uses carefully tested Python libraries with guaranteed compatibility:
 
-**Note**: All dependency versions are tested for compatibility to avoid conflicts. A flexible requirements file (`requirements-flexible.txt`) is also available for development with version ranges.
+**Core Dependencies** (`requirements.txt` - always installs cleanly):
+- **AI Libraries**: OpenAI 1.3.5, Ollama 0.1.7, httpx 0.25.2 for reliable API communication
+- **PDF Processing**: pdfplumber 0.10.3, PyPDF2 3.0.1 for robust text extraction  
+- **Core Tools**: pydantic 1.10.12, pytest 7.4.3, mypy 1.8.0
+
+**Development Dependencies** (`requirements-dev.txt` - install after core):
+- **Data Processing**: pandas 2.1.4, numpy 1.26.4, scikit-learn 1.3.2, spacy 3.6.1
+- **Code Quality**: black 23.12.1, isort 5.13.2, flake8 6.1.0
+- **Testing**: pytest extensions, security tools
+
+**Testing**: Run `python test_functionality.py` to verify installation.
+
+**Note**: The dependency versions are specifically chosen to avoid conflicts. Install core dependencies first, then development tools separately.
 
 ## 🔍 Troubleshooting
 
